@@ -215,7 +215,7 @@ yarn test:shared   # All shared code tests
 - **Database migrations require a server build first.** Some migrations reference scripts in `build/server/scripts/`. Run `yarn build:server` before `yarn db:migrate` if the `build/` directory does not exist.
 - **`.env.development` overrides `.env`.** The dotenvx loader automatically merges these. Use `.env.local` (gitignored) for local overrides that take highest precedence.
 - **The `.env` file is gitignored** and must exist with at least `SECRET_KEY` and `UTILS_SECRET` set (use `openssl rand -hex 32`).
-- **SSL is optional in dev.** The default `.env.development` uses `https://local.outline.dev:3000` which requires `yarn install-local-ssl` (mkcert). For cloud VMs without mkcert, override `URL=http://localhost:3000` and `FORCE_HTTPS=false` in `.env` or `.env.local`.
+- **SSL is optional in dev.** The default `.env.development` uses `https://local.outline.dev:3000` which requires `yarn install-local-ssl` (mkcert). For cloud VMs without mkcert, override `URL=http://localhost:3000` and `FORCE_HTTPS=false` in `.env.local` (not `.env`, because `.env.development` overrides `.env` for the `URL` key).
 - **Test database** is separate: `outline-test` on the same PostgreSQL instance. Migrations must be run with `NODE_ENV=test yarn db:migrate`.
 - **Yarn 4** is required. Enable via `corepack enable && corepack prepare yarn@4.11.0 --activate`.
 - Standard commands for lint/test/build are in `package.json` scripts and documented in the Testing and Code Quality sections above.
