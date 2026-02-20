@@ -214,7 +214,7 @@ yarn test:shared   # All shared code tests
 
 - **Database migrations require a server build first.** Some migrations reference scripts in `build/server/scripts/`. Run `yarn build:server` before `yarn db:migrate` if the `build/` directory does not exist.
 - **`.env.development` overrides `.env`.** The dotenvx loader automatically merges these. Use `.env.local` (gitignored) for local overrides that take highest precedence.
-- **The `.env` file is gitignored** and must exist with at least `SECRET_KEY` and `UTILS_SECRET` set (use `openssl rand -hex 32`).
+- **The `.env` file is gitignored** and must exist with at least `SECRET_KEY` and `UTILS_SECRET` set (use `openssl rand -hex 32`). It must also contain `DATABASE_URL` and `REDIS_URL` because the sequelize CLI (`.sequelizerc`) only loads `.env`, not `.env.development`.
 - **SSL is optional in dev.** The default `.env.development` uses `https://local.outline.dev:3000` which requires `yarn install-local-ssl` (mkcert). For cloud VMs without mkcert, override `URL=http://localhost:3000` and `FORCE_HTTPS=false` in `.env` or `.env.local`.
 - **Test database** is separate: `outline-test` on the same PostgreSQL instance. Migrations must be run with `NODE_ENV=test yarn db:migrate`.
 - **Yarn 4** is required. Enable via `corepack enable && corepack prepare yarn@4.11.0 --activate`.
