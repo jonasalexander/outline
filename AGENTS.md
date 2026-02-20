@@ -193,3 +193,29 @@ yarn test:shared   # All shared code tests
 - Follow OWASP guidelines.
 - Never store sensitive data in plain text.
 - Use environment variables for secrets.
+
+## Cloud-specific instructions
+
+### Services
+
+| Service | How to start | Port |
+|---|---|---|
+| PostgreSQL | `sudo pg_ctlcluster 16 main start` | 5432 |
+| Redis | `sudo redis-server --daemonize yes` | 6379 |
+| Dev server (backend + frontend) | `yarn dev:watch` | 3000 (backend), 3001 (Vite HMR) |
+
+### Starting the dev environment
+
+1. Start PostgreSQL and Redis (see table above).
+2. Run `yarn dev:watch` from the repo root. This starts the backend (Koa API with nodemon auto-restart) and frontend (Vite dev server) concurrently.
+3. The app is available at `http://localhost:3000`.
+
+### Key caveats
+
+- **Database migrations require a server build first.** Some migrations reference scripts in `build/server/scripts/`. Run `yarn build:server` before `yarn db:migrate` if the `build/` directory does not exist.
+- **`.env.development` overrides `.env`.** The dotenvx loader automatically merges these. Use `.env.local` (gitignored) for local overrides that take highest precedence.
+- **The `.env` file is gitignored** and must exist with at least `SECRET_KEY` and `UTILS_SECRET` set (use `openssl rand -hex 32`).
+- **SSL is optional in dev.** The default `.env.development` uses `https://local.outline.dev:3000` which requires `yarn install-local-ssl` (mkcert). For cloud VMs without mkcert, override `URL=http://localhost:3000` and `FORCE_HTTPS=false` in `.env` or `.env.local`.
+- **Test database** is separate: `outline-test` on the same PostgreSQL instance. Migrations must be run with `NODE_ENV=test yarn db:migrate`.
+- **Yarn 4** is required. Enable via `corepack enable && corepack prepare yarn@4.11.0 --activate`.
+- Standard commands for lint/test/build are in `package.json` scripts and documented in the Testing and Code Quality sections above.
